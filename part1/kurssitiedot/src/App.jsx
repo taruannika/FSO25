@@ -5,10 +5,10 @@ const Header = ({ course }) => {
 };
 
 const Part = ({ part }) => {
-  const { name, exercise } = part;
+  const { name, exercises } = part;
   return (
     <p>
-      {name} {exercise}
+      {name} {exercises}
     </p>
   );
 };
