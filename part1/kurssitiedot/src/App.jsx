@@ -13,8 +13,7 @@ const Part = ({ part }) => {
   );
 };
 
-const Content = (props) => {
-  const { part1, part2, part3 } = props;
+const Content = ({ part1, part2, part3 }) => {
   return (
     <div>
       <Part part={part1} />
@@ -24,8 +23,7 @@ const Content = (props) => {
   );
 };
 
-const Total = (props) => {
-  const { part1, part2, part3 } = props;
+const Total = ({ part1, part2, part3 }) => {
   return (
     <p>
       Number of exercises {part1.exercises + part2.exercises + part3.exercises}
