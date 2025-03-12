@@ -1,19 +1,55 @@
 import React from "react";
 import { useState } from "react";
 
+const Button = ({ field, action }) => {
+  return <button onClick={() => action(field)}>{field}</button>;
+};
+
+const StatisticLine = ({ text, value }) => {
+  return (
+    <p>
+      {text} {value}
+    </p>
+  );
+};
+
 const Statistics = ({ stats }) => {
   const total = Object.values(stats).reduce((sum, value) => sum + value, 0);
   const average = (stats.good - stats.bad) / total;
   const positive = (stats.good / total) * 100;
 
+  const lines = [
+    {
+      text: "good",
+      value: stats.good,
+    },
+    {
+      text: "neutral",
+      value: stats.neutral,
+    },
+    {
+      text: "bad",
+      value: stats.bad,
+    },
+    {
+      text: "all",
+      value: total,
+    },
+    {
+      text: "average",
+      value: average,
+    },
+    {
+      text: "positive",
+      value: `${positive}%`,
+    },
+  ];
+
   return (
     <div>
-      <p>good {stats.good}</p>
-      <p>neutral {stats.neutral}</p>
-      <p>bad {stats.bad}</p>
-      <p>all {total}</p>
-      <p>average {average}</p>
-      <p>positive {positive}%</p>
+      {lines.map((line, index) => (
+        <StatisticLine key={index} text={line.text} value={line.value} />
+      ))}
     </div>
   );
 };
@@ -30,9 +66,9 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <button onClick={() => giveFeedback("good")}>good</button>
-      <button onClick={() => giveFeedback("neutral")}>neutral</button>
-      <button onClick={() => giveFeedback("bad")}>bad</button>
+      <Button field="good" action={giveFeedback} />
+      <Button field="neutral" action={giveFeedback} />
+      <Button field="bad" action={giveFeedback} />
 
       <h2>statistics</h2>
       {hasFeedback ? <Statistics stats={stats} /> : <p>No feedback given</p>}
