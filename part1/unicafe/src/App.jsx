@@ -7,6 +7,10 @@ const App = () => {
   const giveFeedback = (field) => {
     setStats({ ...stats, [field]: stats[field] + 1 });
   };
+
+  const total = Object.values(stats).reduce((sum, value) => sum + value, 0);
+  const average = (stats.good - stats.bad) / total;
+  const positive = (stats.good / total) * 100;
   return (
     <div>
       <h1>give feedback</h1>
@@ -18,6 +22,9 @@ const App = () => {
       <p>good {stats.good}</p>
       <p>neutral {stats.neutral}</p>
       <p>bad {stats.bad}</p>
+      <p>all {total}</p>
+      <p>average {average}</p>
+      <p>positive {positive}%</p>
     </div>
   );
 };
