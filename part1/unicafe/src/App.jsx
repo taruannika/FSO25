@@ -7,9 +7,10 @@ const Button = ({ field, action }) => {
 
 const StatisticLine = ({ text, value }) => {
   return (
-    <p>
-      {text} {value}
-    </p>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   );
 };
 
@@ -19,38 +20,22 @@ const Statistics = ({ stats }) => {
   const positive = (stats.good / total) * 100;
 
   const lines = [
-    {
-      text: "good",
-      value: stats.good,
-    },
-    {
-      text: "neutral",
-      value: stats.neutral,
-    },
-    {
-      text: "bad",
-      value: stats.bad,
-    },
-    {
-      text: "all",
-      value: total,
-    },
-    {
-      text: "average",
-      value: average,
-    },
-    {
-      text: "positive",
-      value: `${positive}%`,
-    },
+    { text: "good", value: stats.good },
+    { text: "neutral", value: stats.neutral },
+    { text: "bad", value: stats.bad },
+    { text: "all", value: total },
+    { text: "average", value: average },
+    { text: "positive", value: `${positive}%` },
   ];
 
   return (
-    <div>
-      {lines.map((line, index) => (
-        <StatisticLine key={index} text={line.text} value={line.value} />
-      ))}
-    </div>
+    <table>
+      <tbody>
+        {lines.map((line, index) => (
+          <StatisticLine key={index} text={line.text} value={line.value} />
+        ))}
+      </tbody>
+    </table>
   );
 };
 
