@@ -21,6 +21,8 @@ const Statistics = ({ stats }) => {
 const App = () => {
   const [stats, setStats] = useState({ good: 0, neutral: 0, bad: 0 });
 
+  const hasFeedback = Object.values(stats).some((value) => value !== 0);
+
   const giveFeedback = (field) => {
     setStats({ ...stats, [field]: stats[field] + 1 });
   };
@@ -33,7 +35,7 @@ const App = () => {
       <button onClick={() => giveFeedback("bad")}>bad</button>
 
       <h2>statistics</h2>
-      <Statistics stats={stats} />
+      {hasFeedback ? <Statistics stats={stats} /> : <p>No feedback given</p>}
     </div>
   );
 };
