@@ -1,4 +1,4 @@
-const AddPersonForm = ({ addPerson, newName, handleNameChange }) => {
+const AddPersonForm = ({ addPerson, formData, handleFormDataChange }) => {
   return (
     <form onSubmit={addPerson}>
       <div>
@@ -8,8 +8,19 @@ const AddPersonForm = ({ addPerson, newName, handleNameChange }) => {
           name="name"
           id="name"
           autoComplete="off"
-          value={newName}
-          onChange={handleNameChange}
+          value={formData.name}
+          onChange={handleFormDataChange}
+        />
+      </div>
+      <div>
+        <label htmlFor="number">number:</label>
+        <input
+          type="text"
+          name="number"
+          id="number"
+          autoComplete="off"
+          value={formData.number}
+          onChange={handleFormDataChange}
         />
       </div>
       <div>

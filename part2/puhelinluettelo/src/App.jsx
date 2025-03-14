@@ -3,29 +3,38 @@ import AddPersonForm from "./components/AddPersonForm";
 import Persons from "./components/Persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
-  const [newName, setNewName] = useState("");
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040-123456" },
+  ]);
+
+  const initialFormData = { name: "", number: "" };
+  const [formData, setFormData] = useState(initialFormData);
 
   const addPerson = (e) => {
     e.preventDefault();
 
+    const { name, number } = formData;
     const newPerson = {
-      name: newName,
+      name,
+      number,
     };
 
-    const names = persons.map((person) => person.name);
-    if (names.includes(newName)) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName("");
+    const hasAdded = persons.some(
+      (person) => person.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (hasAdded) {
+      alert(`${name} is already added to phonebook`);
+      setFormData(initialFormData);
       return;
     }
 
     setPersons([...persons, newPerson]);
-    setNewName("");
+    setFormData(initialFormData);
   };
 
-  const handleNameChange = (e) => {
-    setNewName(e.target.value);
+  const handleFormDataChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
@@ -34,8 +43,8 @@ const App = () => {
 
       <AddPersonForm
         addPerson={addPerson}
-        newName={newName}
-        handleNameChange={handleNameChange}
+        formData={formData}
+        handleFormDataChange={handleFormDataChange}
       />
 
       <h2>Numbers</h2>
