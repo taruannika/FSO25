@@ -1,14 +1,24 @@
 import { useState } from "react";
-import AddPersonForm from "./components/AddPersonForm";
-import Persons from "./components/Persons";
+
+import { Persons, Filter, AddPersonForm } from "./components";
 
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456" },
+    { name: "Ada Lovelace", number: "39-44-5323523" },
+    { name: "Dan Abramov", number: "12-43-234345" },
+    { name: "Mary Poppendieck", number: "39-23-6423122" },
   ]);
 
   const initialFormData = { name: "", number: "" };
   const [formData, setFormData] = useState(initialFormData);
+
+  const [filter, setFilter] = useState("");
+
+  const filteredPersons = persons.filter((person) =>
+    person.name.toLowerCase().includes(filter.toLowerCase())
+  );
+  const personsToShow = filter ? filteredPersons : persons;
 
   const addPerson = (e) => {
     e.preventDefault();
@@ -37,10 +47,17 @@ const App = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleFilter = (e) => {
+    setFilter(e.target.value);
+  };
+
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
 
+      <Filter filter={filter} handleFilter={handleFilter} />
+
+      <h2>Add new Person</h2>
       <AddPersonForm
         addPerson={addPerson}
         formData={formData}
@@ -48,7 +65,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={persons} />
+      <Persons persons={personsToShow} />
     </div>
   );
 };

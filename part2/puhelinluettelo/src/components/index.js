@@ -1,3 +1,4 @@
-export { defaul as Person } from "./Person";
-export { defaul as Persons } from "./Persons";
-export { defaul as AddPersonForm } from "./AddPersonForm";
+export { default as Person } from "./Person";
+export { default as Persons } from "./Persons";
+export { default as AddPersonForm } from "./AddPersonForm";
+export { default as Filter } from "./Filter";
