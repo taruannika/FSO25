@@ -38,8 +38,10 @@ const App = () => {
       return;
     }
 
-    setPersons([...persons, newPerson]);
-    setFormData(initialFormData);
+    axios.post("http://localhost:3001/persons", newPerson).then((response) => {
+      setPersons([...persons, response.data]);
+      setFormData(initialFormData);
+    });
   };
 
   const handleFormDataChange = (e) => {
