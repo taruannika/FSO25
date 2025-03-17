@@ -50,24 +50,32 @@ const App = () => {
       ) {
         personService
           .updatePerson(person.id, updatedPerson)
-          .then((data) =>
-            setPersons(persons.map((p) => (p.id !== person.id ? p : data)))
-          );
-        setFormData(initialFormData);
-        setErrorMessage("Updated");
-        setTimeout(() => {
-          setErrorMessage(null);
-        }, 3000);
+          .then((data) => {
+            setPersons(persons.map((p) => (p.id !== person.id ? p : data)));
+            setFormData(initialFormData);
+            setErrorMessage("Updated");
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 3000);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     } else {
       personService
         .create(newPerson)
-        .then((data) => setPersons([...persons, data]));
-      setFormData(initialFormData);
-      setErrorMessage("Added");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 3000);
+        .then((data) => {
+          setPersons([...persons, data]);
+          setFormData(initialFormData);
+          setErrorMessage("Added");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
