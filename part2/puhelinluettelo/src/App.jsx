@@ -33,16 +33,42 @@ const App = () => {
       (person) => person.name.toLowerCase() === name.toLowerCase()
     );
 
-    if (hasAdded) {
+    const person = persons.find(
+      (person) => person.name.toLowerCase() === newPerson.name.toLowerCase()
+    );
+
+    const updatedPerson = { ...person, number: formData.number };
+
+    if (hasAdded && person.number === newPerson.number) {
       alert(`${name} is already added to phonebook`);
       setFormData(initialFormData);
-      return;
-    }
-
-    personService.create(newPerson).then((data) => {
-      setPersons([...persons, data]);
+    } else if (hasAdded && person.number !== newPerson.number) {
+      if (
+        window.confirm(
+          `${newPerson.name} is already added, Update number with ${formData.number}`
+        )
+      ) {
+        personService
+          .updatePerson(person.id, updatedPerson)
+          .then((data) =>
+            setPersons(persons.map((p) => (p.id !== person.id ? p : data)))
+          );
+        setFormData(initialFormData);
+        setErrorMessage("Updated");
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
+      }
+    } else {
+      personService
+        .create(newPerson)
+        .then((data) => setPersons([...persons, data]));
       setFormData(initialFormData);
-    });
+      setErrorMessage("Added");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
+    }
   };
 
   const deletePerson = (id) => {
@@ -52,12 +78,16 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter((person) => person.id !== id));
+          setErrorMessage("Removed");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
         })
         .catch(() => {
           setErrorMessage(`${person.name} was already removed from server`);
           setTimeout(() => {
             setErrorMessage(null);
-          }, 5000);
+          }, 3000);
           setPersons(persons.filter((person) => person.id !== id));
         });
     }
