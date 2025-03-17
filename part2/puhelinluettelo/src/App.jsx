@@ -7,6 +7,7 @@ const App = () => {
   const initialFormData = { name: "", number: "" };
   const [formData, setFormData] = useState(initialFormData);
   const [filter, setFilter] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.toLowerCase())
@@ -44,6 +45,24 @@ const App = () => {
     });
   };
 
+  const deletePerson = (id) => {
+    const person = persons.find((person) => person.id === id);
+    if (window.confirm(`Delete ${person.name}`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch(() => {
+          setErrorMessage(`${person.name} was already removed from server`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+          setPersons(persons.filter((person) => person.id !== id));
+        });
+    }
+  };
+
   const handleFormDataChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -56,6 +75,8 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
 
+      {errorMessage && <p>{errorMessage}</p>}
+
       <Filter filter={filter} handleFilter={handleFilter} />
 
       <h2>Add new Person</h2>
@@ -66,7 +87,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} deletePerson={deletePerson} />
     </div>
   );
 };
