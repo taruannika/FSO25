@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Persons, Filter, AddPersonForm } from "./components";
+import { Persons, Filter, AddPersonForm, Notification } from "./components";
 import personService from "./services/persons";
 
 const App = () => {
@@ -7,7 +7,10 @@ const App = () => {
   const initialFormData = { name: "", number: "" };
   const [formData, setFormData] = useState(initialFormData);
   const [filter, setFilter] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notifigation, setNotifigation] = useState({
+    message: null,
+    hasError: false,
+  });
 
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(filter.toLowerCase())
@@ -15,9 +18,14 @@ const App = () => {
   const personsToShow = filter ? filteredPersons : persons;
 
   useEffect(() => {
-    personService.getAll().then((initialPersons) => {
-      setPersons(initialPersons);
-    });
+    personService
+      .getAll()
+      .then((initialPersons) => {
+        setPersons(initialPersons);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   const addPerson = (e) => {
@@ -53,9 +61,12 @@ const App = () => {
           .then((data) => {
             setPersons(persons.map((p) => (p.id !== person.id ? p : data)));
             setFormData(initialFormData);
-            setErrorMessage("Updated");
+            setNotifigation({
+              ...notifigation,
+              message: `${person.name}'s number updated successfully!`,
+            });
             setTimeout(() => {
-              setErrorMessage(null);
+              setNotifigation({ ...notifigation, message: null });
             }, 3000);
           })
           .catch((error) => {
@@ -68,9 +79,13 @@ const App = () => {
         .then((data) => {
           setPersons([...persons, data]);
           setFormData(initialFormData);
-          setErrorMessage("Added");
+          setNotifigation({
+            ...notifigation,
+            message: `${newPerson.name} added succesfully!`,
+          });
+
           setTimeout(() => {
-            setErrorMessage(null);
+            setNotifigation({ ...notifigation, message: null });
           }, 3000);
         })
         .catch((error) => {
@@ -86,17 +101,25 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter((person) => person.id !== id));
-          setErrorMessage("Removed");
+          setNotifigation({
+            ...notifigation,
+            message: `${person.name} removed successfully`,
+          });
+
           setTimeout(() => {
-            setErrorMessage(null);
+            setNotifigation({ ...notifigation, message: null });
           }, 3000);
         })
         .catch(() => {
-          setErrorMessage(`${person.name} was already removed from server`);
+          setNotifigation({
+            message: `${person.name} was already removed from server`,
+            hasError: true,
+          });
+
           setTimeout(() => {
-            setErrorMessage(null);
+            setNotifigation({ message: null, hasError: false });
           }, 3000);
-          setPersons(persons.filter((person) => person.id !== id));
+          // setPersons(persons.filter((person) => person.id !== id));
         });
     }
   };
@@ -113,7 +136,12 @@ const App = () => {
     <div>
       <h1>Phonebook</h1>
 
-      {errorMessage && <p>{errorMessage}</p>}
+      {notifigation.message && (
+        <Notification
+          message={notifigation.message}
+          hasError={notifigation.hasError}
+        />
+      )}
 
       <Filter filter={filter} handleFilter={handleFilter} />
 
